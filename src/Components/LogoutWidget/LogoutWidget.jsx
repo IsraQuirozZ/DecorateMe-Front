@@ -3,16 +3,30 @@ import axios from "axios";
 import "./LogoutWidget.css";
 
 const LogoutWidget = () => {
-  const clickHandler = () => {
+  const logoutHandler = () => {
+    console.log(document.cookie);
     axios
-      .post("http://localhost:8080/api/auth/logout", {})
-      .then((res) => console.log(res))
+      .post(
+        "http://localhost:8080/api/auth/logout",
+        {},
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      )
+      .then(() => (window.location.href = "/"))
       .catch((err) => console.log(err));
   };
 
   return (
-    <div className="logoutWidget" onClick={clickHandler}>
-      <LogoutIcon sx={{ color: "white", fontSize: 35 }} />
+    <div className="logoutWidget">
+      <LogoutIcon
+        sx={{ color: "white", fontSize: 35 }}
+        onClick={logoutHandler}
+      />
     </div>
   );
 };
