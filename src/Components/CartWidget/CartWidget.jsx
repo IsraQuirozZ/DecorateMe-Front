@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-// import { CartContext } from "../../contexts/CartContext";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import "./CartWidget.css";
+import { Badge } from "@mui/material";
+import { ShoppingCart } from "@mui/icons-material";
+// import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const CartWidget = () => {
-  const [products, setProducts] = useState(0);
+  const [quantityProducts, setQuantityProducts] = useState(0);
 
   useEffect(() => {
     axios
@@ -18,17 +18,16 @@ const CartWidget = () => {
         withCredentials: true,
       })
       .then((res) => {
-        setProducts(res.data.response.products.length);
+        setQuantityProducts(res.data.response.products.length);
       })
       .catch((err) => console.log(err));
   }, []);
 
   return (
     <Link to="/cart">
-      <div className="cartWidget">
-        <ShoppingCartIcon sx={{ color: "white", fontSize: 35 }} />
-        <p className="cartProducts">{products}</p>
-      </div>
+      <Badge badgeContent={quantityProducts} color="success">
+        <ShoppingCart fontSize="large" sx={{ color: '#fff' }} />
+      </Badge>
     </Link>
   );
 };

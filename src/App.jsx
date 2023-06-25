@@ -1,3 +1,4 @@
+import { SessionProvider } from "./Context/SessionContext";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./Components/Header/Header";
 import Home from "./Components/Home/Home";
@@ -12,19 +13,21 @@ import Login from "./Components/Login/Login";
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/products" element={<ProductsContainer />} />
-          <Route path="/products/:pid" element={<ProductDetail />} />
-          <Route path="/new_product" element={<NewProduct />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />}></Route>
-          {/* <Route path='/chat' element={<Chat/>}/> */}
-        </Routes>
-      </BrowserRouter>
+      <SessionProvider>
+        <BrowserRouter>
+          <Header />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/products" element={<ProductsContainer />} />
+            <Route path="/products/:pid" element={<ProductDetail />} />
+            <Route path="/new_product" element={<NewProduct />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />}></Route>
+            {/* <Route path='/chat' element={<Chat/>}/> */}
+          </Routes>
+        </BrowserRouter>
+      </SessionProvider>
     </>
   );
 }

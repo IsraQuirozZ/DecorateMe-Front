@@ -22,12 +22,11 @@ const LogoutWidget = () => {
   };
 
   return (
-    <div className="logoutWidget">
       <LogoutIcon
-        sx={{ color: "white", fontSize: 35 }}
+        fontSize="large"
+        sx={{ color: "white" }}
         onClick={logoutHandler}
       />
-    </div>
   );
 };
 
