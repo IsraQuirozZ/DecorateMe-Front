@@ -4,16 +4,11 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import "./UserWidget.css";
 
 const UserWidget = () => {
-  //   const [user, SetUser] = useState("");
-  //   if (user) {
-  //     SetUser("user");
-  //   }
+
   return (
-    <div className="userWidget">
-      <Link to="/login">
-        <AccountCircleIcon sx={{ color: "white", fontSize: 35 }} />
-      </Link>
-    </div>
+    <Link to='/login' className="userWidget">
+      <AccountCircleIcon sx={{ color: "white", fontSize: 35 }} />
+    </Link>
   );
 };
 

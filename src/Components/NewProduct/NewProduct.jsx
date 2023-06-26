@@ -1,51 +1,59 @@
 import Swal from "sweetalert2";
 import "./NewProduct.css";
+import axios from "axios";
+import { useContext } from "react";
+import { SessionContext } from "../../Context/SessionContext";
 
 const NewProduct = () => {
+
+  const context = useContext(SessionContext)
+
   const submitHandler = async (e) => {
-    e.preventDefault();
-    console.log(e.target);
+    try {
+      e.preventDefault();
+  
+      const formData = new FormData(e.currentTarget);
+  
+      const res = await axios.post('http://localhost:8080/api/products', {
+        name: formData.get("name"),
+        description: formData.get("description"),
+        category: formData.get("category"),
+        price: formData.get("price"),
+        thumbnail: formData.get('thumbnail'),
+        stock: formData.get('stock')
+      },{
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      })
 
-    const formData = new FormData(e.target);
-    const urlSearchParams = new URLSearchParams();
-
-    for (const pair of formData) {
-      urlSearchParams.append(pair[0], pair[1]);
-    }
-
-    const res = await fetch(e.target.action, {
-      method: e.target.method,
-      body: urlSearchParams,
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    });
-
-    const data = await res.json();
-
-    if (data.success) {
-      Swal.fire({
-        title: "Product created successfully",
-        icon: "success",
-        allowEscapeKey: false,
-        allowOutsideClick: false,
-        confirmButtonText: "Go to products",
-      }).then((res) => {
-        if (res.isConfirmed) {
-          e.target.reset();
-          window.location.href = "http://127.0.0.1:5173/products";
-        }
-      });
-    } else {
+      if (res.status === 201) {
+        Swal.fire({
+          title: "Product created successfully",
+          icon: "success",
+          allowEscapeKey: false,
+          allowOutsideClick: false,
+          confirmButtonText: "Go to products",
+        }).then((res) => {
+          if (res.isConfirmed) {
+            e.target.reset();
+            window.location.href = "http://127.0.0.1:5173/products";
+          }
+        });
+      }
+    } catch (err) {
       Swal.fire({
         title: "Error",
-        text: `Error ${data.status}: ${data.response}`,
+        text: `Error ${err.response.data.status}: ${err.response.data.response}`,
         icon: "error",
       });
     }
   };
 
   return (
+    context.user?.role === 1 ? 
     <form
       onSubmit={(e) => submitHandler(e)}
       action="http://localhost:8080/api/products"
@@ -65,6 +73,7 @@ const NewProduct = () => {
       <input name="stock" type="number" />
       <input type="submit" />
     </form>
+    : 'Not Authorized'
   );
 };
 

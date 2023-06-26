@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState, useContext } from "react";
+import { SessionContext } from "../../Context/SessionContext";
 import { AppBar, Container, Toolbar, Box, IconButton, Typography, Menu, Button, MenuItem } from "@mui/material";
 import { Adb } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -9,25 +9,8 @@ import LogoutWidget from "../LogoutWidget/LogoutWidget";
 
 const Header = () => {
 
-  const [isSession, setIsSession] = useState(false);
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:8080/api/auth/session", {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      })
-      .then((res) => {
-        if (res.data.email) {
-          setIsSession(true);
-        }
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
+  const context = useContext(SessionContext)
+  
   const [anchorElNav, setAnchorElNav] = useState(null);
 
   const handleOpenNavMenu = (event) => {
@@ -135,7 +118,7 @@ const Header = () => {
               <CartWidget/>
             </IconButton>
             <IconButton sx={{ p: 0, paddingLeft: '.8rem' }}>
-              <LogoutWidget/> {/* Si está logeado logout, sino login */}
+              {context.session ? <LogoutWidget/> : <UserWidget/> }
             </IconButton>
 
           </Box>

@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import "./Login.css";
-import GoogleIcon from "@mui/icons-material/Google";
-import axios from "axios";
+// import GoogleIcon from "@mui/icons-material/Google";
+// import "./Login.css";
+import { Typography, Button, TextField, Box, Container, Grid } from "@mui/material";
+import { SessionContext } from "../../Context/SessionContext";
 
 const Login = () => {
+
+  const { login, setUser, setSession } = useContext(SessionContext)
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -26,15 +30,11 @@ const Login = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    axios
-      .post("http://localhost:8080/api/auth/login", formData, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      })
-      .then(() => {
+    login(formData)
+      .then((res) => {
+        setSession(true)
+        const {email, role} = res.data
+        setUser({email, role})
         setFormData({
           email: "",
           password: "",
@@ -46,6 +46,7 @@ const Login = () => {
         window.location.href = "/";
       })
       .catch((err) => {
+        console.log(err)
         if (err.response.status === 404 || err.response.status === 411) {
           setValidation({
             email: false,
@@ -59,55 +60,115 @@ const Login = () => {
   };
 
   return (
-    <div className="loginContainer">
-      <div className="login">
-        <div className="loginTitle">
-          <h1>Welcome to DecorateMe</h1>
-          <p>Sign In to Continue</p>
-        </div>
-
-        <button className="googleBtn">
-          <GoogleIcon color="primary" />
-          Log In with Google
-        </button>
-        <div className="divider"></div>
-        <form className="loginForm" onSubmit={submitHandler}>
-          <label htmlFor="email">Email</label>
-          <input
-            placeholder="email@example.com"
-            type="email"
+    <Container component="main" maxWidth="lg">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          Sign in
+        </Typography>
+        <Box component="form" onSubmit={(e) => submitHandler(e)} noValidate sx={{ mt: 1 }}>
+          <TextField
+            error={!validation.email}
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
             name="email"
-            value={formData.email}
+            autoComplete="email"
+            autoFocus
             onChange={changeHandler}
-            className={validation.email ? "" : "invalid"}
           />
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
+          <TextField
+            error={!validation.password}
+            margin="normal"
+            required
+            fullWidth
             name="password"
-            value={formData.password}
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
             onChange={changeHandler}
-            className={validation.password ? "" : "invalid"}
           />
-          <p>{message}</p>
-          <Link>Forgot Password?</Link>
-          <button className="loginBtn">Log In</button>
-        </form>
-        <p>
-          Dont have an account?
-          <Link to="/register"> Create a account for free</Link>
-        </p>
-      </div>
-      <div className="imgContainer">
-        <h2>Discovering the Best Furniture for Four Home</h2>
-        <img
-          className="loginImg"
-          src="/img/marco-fotos-arte-abstracto-junto-sillon-terciopelo-rosa.jpg"
-          alt="login image"
-        />
-      </div>
-    </div>
-  );
+          <Typography>{message}</Typography>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Sign In
+          </Button>
+            <Grid item xs>
+              <Link href="#" variant="body2">
+                Forgot password?
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link to="/register" variant="body2">
+                {"Don't have an account? Sign Up"}
+              </Link>
+            </Grid>
+        </Box>
+      </Box>
+    </Container>
+  )
+    // <Box sx={{display: 'flex'}}>
+    //   <Box sx={{maxWidth: '50vw'}}>
+    //     <Typography variant="h4">Welcome to DecorateMe</Typography>
+    //     <Typography>Sign In to Continue</Typography>
+
+
+    //     <Button variant="outlined" startIcon={<GoogleIcon color="primary" />}>
+    //       Log In with Google
+    //     </Button>
+    //     <Divider/>
+    //     <form className="loginForm" onSubmit={submitHandler}>
+    //       {/* <label htmlFor="email">Email</label>
+    //       <input
+    //         placeholder="email@example.com"
+    //         type="email"
+    //         name="email"
+    //         value={formData.email}
+    //         onChange={changeHandler}
+    //         className={validation.email ? "" : "invalid"}
+    //       /> */}
+    //       <TextField label="Email" variant="outlined" type="email" name="email" value={formData.email} onChange={changeHandler} />
+    //       {/* <label htmlFor="password">Password</label>
+    //       <input
+    //         type="password"
+    //         name="password"
+    //         value={formData.password}
+    //         onChange={changeHandler}
+    //         className={validation.password ? "" : "invalid"}
+    //       /> */}
+    //       <TextField label="Password" variant="outlined" name="password" value={formData.password} onChange={changeHandler} />
+    //       <Typography>{message}</Typography>
+    //       <Link>Forgot Password?</Link>
+    //       <Button size="large" variant="contained" sx={{bgcolor: '#161616'}}>Log In</Button>
+    //     </form>
+    //     <Typography>
+    //       Dont have an account?
+    //       <Link to="/register"> Create a account for free</Link>
+    //     </Typography>
+    //   </Box>
+    //   <Box className="imgContainer">
+    //     <Typography variant="h4">Discovering the Best Furniture for Four Home</Typography>
+    //     <img
+    //       className="loginImg"
+    //       src="/img/marco-fotos-arte-abstracto-junto-sillon-terciopelo-rosa.jpg"
+    //       alt="login image"
+    //     />
+    //   </Box>
+    // </Box>
+//   );
 };
 
 export default Login;

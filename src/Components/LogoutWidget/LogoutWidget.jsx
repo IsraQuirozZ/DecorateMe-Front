@@ -1,24 +1,15 @@
 import LogoutIcon from "@mui/icons-material/Logout";
-import axios from "axios";
 import "./LogoutWidget.css";
+import { useContext } from "react";
+import { SessionContext } from "../../Context/SessionContext";
 
 const LogoutWidget = () => {
+
+  const context = useContext(SessionContext)
+
   const logoutHandler = () => {
-    console.log(document.cookie);
-    axios
-      .post(
-        "http://localhost:8080/api/auth/logout",
-        {},
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      )
-      .then(() => (window.location.href = "/"))
-      .catch((err) => console.log(err));
+    context.logout()
+    // mensaje de session closed successfully
   };
 
   return (

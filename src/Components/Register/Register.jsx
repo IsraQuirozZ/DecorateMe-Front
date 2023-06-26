@@ -11,22 +11,25 @@ import {
 } from "@mui/material";
 import { LockOutlined } from "@mui/icons-material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import axios from "axios";
 import Swal from "sweetalert2";
+import { useContext } from "react";
+import { SessionContext } from '../../Context/SessionContext'
 
 const theme = createTheme();
 
 const Register = () => {
+
+  const context = useContext(SessionContext)
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    await axios
-      .post("http://localhost:8080/api/auth/register", {
-        name: data.get("name"),
-        email: data.get("email"),
-        age: data.get("age"),
-        password: data.get("password"),
-      })
+    context.Register({
+      name: data.get("name"),
+      email: data.get("email"),
+      age: data.get("age"),
+      password: data.get("password"),
+    })
       .then((res) => {
         if (res.status === 201) {
           Swal.fire({
@@ -35,7 +38,7 @@ const Register = () => {
             icon: "success",
           });
         }
-        window.location.href = "http://localhost:5173/";
+        window.location.href = "/";
       })
       .catch((err) => {
         if (err.response.status === 409) {
@@ -44,7 +47,7 @@ const Register = () => {
             text: "User already authenticated",
             icon: "error",
           });
-        } else if (err.response.status === 411) {
+        } else if (err.response.status === 400) {
           Swal.fire({
             title: "Error",
             text: err.response.data.response,
