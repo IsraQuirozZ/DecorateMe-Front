@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import CartCard from "./CartCard";
+import Load from "../Load/Load";
 import "./Cart.css";
 
 const Cart = () => {
@@ -38,7 +39,7 @@ const Cart = () => {
     axios
       .get(`http://localhost:8080/api/cart/bills/648a0049c5392c5c08014dc6`)
       .then((res) => {
-        let total = res.data.response[0].total;
+        let total = res.data.response[0] ? res.data.response[0].total : 0 ;
         setTotal(total.toFixed(2));
       })
       .catch((err) => console.log(err));
@@ -64,7 +65,7 @@ const Cart = () => {
         </>
         <div className="cartList">
           {load
-            ? "cargando"
+            ? <Load/>
             : products.map((product) => (
                 <CartCard key={product.id} product={product} />
               ))}
