@@ -1,35 +1,40 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import "./Header.css";
+import UserWidget from "../UserWidget/UserWidget";
+import CartWidget from "../CartWidget/CartWidget";
+import LogoutWidget from "../LogoutWidget/LogoutWidget";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
-  const [products, setProducts] = useState(0);
+  const [isSession, setIsSession] = useState(false);
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/cart/648a0049c5392c5c08014dc6`)
+      .get("http://localhost:8080/api/auth/session", {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      })
       .then((res) => {
-        setProducts(res.data.response.products.length);
-      });
+        if (res.data.email) {
+          setIsSession(true);
+        }
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   return (
     <header>
-      <picture className="logo">
-        <a href="/">
-          <img src="" alt="Logo" />
-        </a>
-      </picture>
+      <h2 className="logo">
+        <a href="/">Logo</a>
+      </h2>
       <div>
-        <div>
-          <a href="/cart">
-            <i>
-              <img src="/icons/shopping-cart.svg" alt="Cart" />
-            </i>
-          </a>
-          <span id="cart">{products}</span>
-        </div>
+        <UserWidget />
+        {isSession ? <LogoutWidget /> : ""}
+        <CartWidget />
         <div>
           <i onClick={() => setOpen(!open)} id={open ? "open" : "close"}>
             <img
