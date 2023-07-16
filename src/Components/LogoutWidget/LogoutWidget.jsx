@@ -1,11 +1,11 @@
 import LogoutIcon from "@mui/icons-material/Logout";
 import "./LogoutWidget.css";
 import { useContext } from "react";
-import { SessionContext } from "../../Context/SessionContext";
+import { UserContext } from "../../Context/UserContext";
 
 const LogoutWidget = () => {
 
-  const context = useContext(SessionContext)
+  const context = useContext(UserContext)
 
   const logoutHandler = () => {
     context.logout()

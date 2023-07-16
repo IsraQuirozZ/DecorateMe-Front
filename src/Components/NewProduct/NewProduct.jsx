@@ -2,11 +2,11 @@ import Swal from "sweetalert2";
 import "./NewProduct.css";
 import axios from "axios";
 import { useContext } from "react";
-import { SessionContext } from "../../Context/SessionContext";
+import { UserContext } from "../../Context/UserContext";
 
 const NewProduct = () => {
 
-  const context = useContext(SessionContext)
+  const context = useContext(UserContext)
 
   const submitHandler = async (e) => {
     try {

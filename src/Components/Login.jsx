@@ -10,11 +10,12 @@ import {
   Container,
   Grid,
 } from "@mui/material";
-import { SessionContext } from "../../Context/SessionContext";
-import GithubWidget from "../GithubWidget";
+import { UserContext } from "../Context/UserContext";
+import GithubWidget from "./GithubWidget";
+import Swal from "sweetalert2";
 
 const Login = () => {
-  const { login, setUser, setSession } = useContext(SessionContext);
+  const { login, setUser } = useContext(UserContext);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -38,10 +39,9 @@ const Login = () => {
   const submitHandler = (e) => {
     e.preventDefault();
     login(formData)
-      .then((res) => {
-        setSession(true)
-        const { email, role, cid } = res.data.user
-        setUser({ email, role, cid })
+      .then(async (res) => {
+        const { email, role, cid } = res.data.payload.user
+        await setUser({ email, role, cid })
         setFormData({
           email: "",
           password: "",
@@ -53,14 +53,22 @@ const Login = () => {
         window.location.href = "/";
       })
       .catch((err) => {
-        if (err.response.status === 404 || err.response.status === 411 || err.response.status === 401) {
-          setValidation({
-            email: false,
-            password: false,
-          });
-          setMessage(err.response.data.response);
-        } else if (err.response.status === 403) {
-          setMessage(err.response.data.response);
+        if (err.response.status === 400) {
+          setMessage(err.response.data.error)
+        } else if (err.response.status === 401) {
+          Swal.fire({
+            title: 'Error',
+            text: err.response.data.error,
+            icon: 'error',
+            confirmButtonText: 'Return home'
+          }).then((res) => { if (res.isConfirmed) { window.location.href = '/' } })
+        } else if (err.response.data.error === 404) {
+          Swal.fire({
+            title: 'Error',
+            text: err.response.data.error,
+            icon: 'error',
+            confirmButtonText: 'Register'
+          }).then((res) => { if (res.isConfirmed) { window.location.href = '/register' } })
         }
       });
   };
@@ -108,7 +116,7 @@ const Login = () => {
             autoComplete="current-password"
             onChange={changeHandler}
           />
-          <Typography sx={{ color: "rgb(175, 175, 175)" }}>
+          <Typography sx={{ color: "black" }}>
             {message}
           </Typography>
           <Button
@@ -131,7 +139,6 @@ const Login = () => {
           </Grid>
           <GithubWidget />
         </Box>
-        <GithubWidget />
       </Box>
     </Container>
   )

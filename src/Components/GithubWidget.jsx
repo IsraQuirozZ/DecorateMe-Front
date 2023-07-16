@@ -1,11 +1,11 @@
 import { useContext } from 'react'
-import { SessionContext } from '../Context/SessionContext'
+import { UserContext } from '../Context/UserContext'
 import { Button } from '@mui/material'
 import GitHubIcon from '@mui/icons-material/GitHub'
 
 const GithubWidget = () => {
 
-	const { signInGH } = useContext(SessionContext)
+	const { signInGH } = useContext(UserContext)
 
 	const loginHandler = () => {
 		// github login

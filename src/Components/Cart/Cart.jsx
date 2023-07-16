@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { SessionContext } from "../../Context/SessionContext";
+import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
 import CartCard from "./CartCard";
 import Load from "../Load/Load";
@@ -7,7 +7,7 @@ import "./Cart.css";
 
 const Cart = () => {
 
-  const { getCart, products, totalProducts, user } = useContext(SessionContext)
+  const { getCart, products, totalProducts, user } = useContext(UserContext)
 
   const [load, setLoad] = useState(true);
   const [total, setTotal] = useState(0);
@@ -18,6 +18,8 @@ const Cart = () => {
       .catch((err) => console.log(err))
       .finally(setLoad(false));
 
+      console.log(user)
+
     axios
       .get(`http://localhost:8080/api/cart/bills/${user.cid}`)
       .then((res) => {
@@ -25,7 +27,7 @@ const Cart = () => {
         setTotal(total.toFixed(2));
       })
       .catch((err) => console.log(err));
-  }, [products]);
+  }, [products, user]);
 
   return (
     <section className="cartSection" id="cartSection">

@@ -13,14 +13,14 @@ import { LockOutlined } from "@mui/icons-material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Swal from "sweetalert2";
 import { useContext } from "react";
-import { SessionContext } from '../../Context/SessionContext'
+import { UserContext } from '../../Context/UserContext'
 import GithubWidget from "../GithubWidget";
 
 const theme = createTheme();
 
 const Register = () => {
 
-  const context = useContext(SessionContext)
+  const context = useContext(UserContext)
 
   const handleSubmit = async (event) => {
     event.preventDefault();

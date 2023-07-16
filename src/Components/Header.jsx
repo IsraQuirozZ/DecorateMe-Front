@@ -1,16 +1,17 @@
 import { useState, useContext } from "react";
-import { SessionContext } from "../../Context/SessionContext";
+import { UserContext } from "../Context/UserContext";
+import { Link } from "react-router-dom";
 import { AppBar, Container, Toolbar, Box, IconButton, Typography, Menu, Button, MenuItem } from "@mui/material";
 import { Adb } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
-import UserWidget from "../UserWidget/UserWidget";
-import CartWidget from "../CartWidget/CartWidget";
-import LogoutWidget from "../LogoutWidget/LogoutWidget";
+import UserWidget from "./UserWidget/UserWidget";
+import CartWidget from "./Cart/CartWidget";
+import LogoutWidget from "./LogoutWidget/LogoutWidget";
 
 const Header = () => {
 
-  const context = useContext(SessionContext)
-  
+  const context = useContext(UserContext)
+
   const [anchorElNav, setAnchorElNav] = useState(null);
 
   const handleOpenNavMenu = (event) => {
@@ -20,8 +21,6 @@ const Header = () => {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
-  const pages = ['products']
 
   return (
     <AppBar sx={{ backgroundColor: '#161616' }} position="static">
@@ -75,11 +74,9 @@ const Header = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Link style={{ textDecoration: 'none', color: 'black' }} to={`/products`}><Typography textAlign="center">PRODUCTS</Typography></Link>
+              </MenuItem>
             </Menu>
           </Box>
           <Adb sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -102,23 +99,22 @@ const Header = () => {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
+              <Link to='/products'>
+                <Button
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  Products
+                </Button>
+              </Link>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
             <IconButton>
-              <CartWidget/>
+              <CartWidget />
             </IconButton>
             <IconButton sx={{ p: 0, paddingLeft: '.8rem' }}>
-              {context.session ? <LogoutWidget/> : <UserWidget/> }
+              {Object.keys(context.user).length !== 0 ? <LogoutWidget /> : <UserWidget />}
             </IconButton>
 
           </Box>

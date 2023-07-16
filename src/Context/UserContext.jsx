@@ -2,12 +2,11 @@
 import { createContext, useState, useEffect } from 'react'
 import axios from 'axios'
 
-const SessionContext = createContext([])
+const UserContext = createContext([])
 
-const SessionProvider = ({ children }) => {
+const UserProvider = ({ children }) => {
 
   const [user, setUser] = useState({})
-  const [session, setSession] = useState(false)
 
   const [cart, setCart] = useState([])
   const [quantityProducts, setQuantityProducts] = useState(0);
@@ -15,9 +14,9 @@ const SessionProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    // session
+    // logged in
     axios
-      .get("http://localhost:8080/api/auth/session", {
+      .get("http://localhost:8080/api/session/current", {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -27,7 +26,6 @@ const SessionProvider = ({ children }) => {
       .then(async (res) => {
         setUser(res.data)
         if (res.data.email) {
-          setSession(true);
           let cartProducts = res.data.response.products;
           let products = [];
           let totalProducts = 0;
@@ -65,12 +63,12 @@ const SessionProvider = ({ children }) => {
 
   const register = async formData => {
     return await axios
-      .post("http://localhost:8080/api/auth/register", formData)
+      .post("http://localhost:8080/api/session/register", formData)
   }
 
   const login = async formData => {
     return await axios
-      .post("http://localhost:8080/api/auth/login", formData, {
+      .post("http://localhost:8080/api/session/login", formData, {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -82,7 +80,7 @@ const SessionProvider = ({ children }) => {
   const logout = async () => {
     return await axios
       .post(
-        "http://localhost:8080/api/auth/logout",
+        "http://localhost:8080/api/session/logout",
         {},
         {
           headers: {
@@ -93,7 +91,6 @@ const SessionProvider = ({ children }) => {
         }
       )
       .then(() => {
-        setSession(false)
         setUser({})
         window.location.href = "/"
       })
@@ -114,10 +111,10 @@ const SessionProvider = ({ children }) => {
   }
 
   return (
-    <SessionContext.Provider value={{ user, setUser, cart, setCart, getCart, quantityProducts, setQuantityProducts, totalProducts, products, session, setSession, register, login, logout, signInGH }}>
+    <UserContext.Provider value={{ user, setUser, cart, setCart, getCart, quantityProducts, setQuantityProducts, totalProducts, products, register, login, logout, signInGH }}>
       {children}
-    </SessionContext.Provider>
+    </UserContext.Provider>
   )
 }
 
-export { SessionContext, SessionProvider }
+export { UserContext, UserProvider }
