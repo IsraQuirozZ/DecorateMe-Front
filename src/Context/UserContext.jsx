@@ -10,8 +10,6 @@ const UserProvider = ({ children }) => {
 
   const [cart, setCart] = useState([])
   const [quantityProducts, setQuantityProducts] = useState(0);
-  const [totalProducts, setTotalProducts] = useState(0);
-  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     // logged in
@@ -41,7 +39,10 @@ const UserProvider = ({ children }) => {
         // setProducts(products);
         // setTotalProducts(totalProducts);
       })
-      .catch(() => setUser({}));
+      .catch(error => {
+        console.log(error)
+        setUser({})
+      });
   }, [])
 
   const getCart = async () => {
@@ -108,7 +109,7 @@ const UserProvider = ({ children }) => {
   }
 
   return (
-    <UserContext.Provider value={{ user, setUser, cart, setCart, getCart, quantityProducts, setQuantityProducts, totalProducts, products, register, login, logout, signInGH }}>
+    <UserContext.Provider value={{ user, setUser, cart, setCart, getCart, quantityProducts, setQuantityProducts, register, login, logout, signInGH }}>
       {children}
     </UserContext.Provider>
   )
