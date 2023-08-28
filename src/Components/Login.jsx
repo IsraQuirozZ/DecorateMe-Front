@@ -40,8 +40,8 @@ const Login = () => {
     e.preventDefault();
     login(formData)
       .then(async (res) => {
-        const { email, role, cid } = res.data.response.user
-        await setUser({ email, role, cid })
+        console.log(res)
+        await setUser(res.data.response.user)
         setFormData({
           email: "",
           password: "",
@@ -129,7 +129,7 @@ const Login = () => {
             Sign In
           </Button>
           <Grid item xs>
-            <Link href="#" variant="body2">
+            <Link to="/forgot-password" variant="body2">
               Forgot password?
             </Link>
           </Grid>

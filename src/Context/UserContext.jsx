@@ -11,40 +11,6 @@ const UserProvider = ({ children }) => {
   const [cart, setCart] = useState([])
   const [quantityProducts, setQuantityProducts] = useState(0);
 
-  useEffect(() => {
-    // logged in
-    axios
-      .get("http://localhost:8080/api/session/current", {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      })
-      .then(async (res) => {
-        setUser(res.data.response.user)
-        // let cartProducts = res.data.response.products;
-        // let products = [];
-        // let totalProducts = 0;
-        // for (let product of cartProducts) {
-        //   products.push({
-        //     id: product.pid,
-        //     product: await axios
-        //       .get(`http://localhost:8080/api/products/${product.pid}`)
-        //       .then((res) => res.data.response),
-        //     units: product.units,
-        //   });
-        //   totalProducts += product.units;
-        // }
-        // setProducts(products);
-        // setTotalProducts(totalProducts);
-      })
-      .catch(error => {
-        console.log(error)
-        setUser({})
-      });
-  }, [])
-
   const getCart = async () => {
     // axios
     //   .get(`http://localhost:8080/api/cart/${user.cid}`, {
@@ -95,6 +61,21 @@ const UserProvider = ({ children }) => {
       .catch((err) => console.log(err));
   }
 
+  const forgotPassword = email => {
+    return axios
+      .post(
+        'http://localhost:8080/api/session/forgot-password',
+        { email },
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }  
+      ,)
+  }
+
   const signInGH = async () => {
     return axios.get('http://localhost:8080/api/auth/github',
       {},
@@ -109,7 +90,7 @@ const UserProvider = ({ children }) => {
   }
 
   return (
-    <UserContext.Provider value={{ user, setUser, cart, setCart, getCart, quantityProducts, setQuantityProducts, register, login, logout, signInGH }}>
+    <UserContext.Provider value={{ user, setUser, cart, setCart, getCart, quantityProducts, setQuantityProducts, register, login, logout, forgotPassword, signInGH }}>
       {children}
     </UserContext.Provider>
   )

@@ -8,6 +8,8 @@ import Cart from "./Components/Cart/Cart";
 import NewProduct from "./Components/NewProduct/NewProduct";
 import Register from "./Components/Register";
 import Login from "./Components/Login";
+import ResetPassword from "./Components/ResetPassword";
+import ForgotPassword from "./Components/ForgotPassword";
 // import Chat from './Components/Chat/Chat'
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />}></Route>
+            <Route path="/reset-password/:token" element={<ResetPassword/>}></Route>
+            <Route path="/forgot-password" element={<ForgotPassword/>}></Route>
             {/* <Route path='/chat' element={<Chat/>}/> */}
           </Routes>
         </BrowserRouter>

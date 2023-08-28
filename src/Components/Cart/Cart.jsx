@@ -9,26 +9,24 @@ import { Box, Button, Typography } from "@mui/material";
 
 const Cart = () => {
 
-  const { getCart, user, cart } = useContext(UserContext)
+  const { user, cart } = useContext(UserContext)
 
   const [load, setLoad] = useState(true);
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
     // Llamada a mongo para cart
-    getCart()
-      .catch((err) => console.log(err))
-      .finally(setLoad(false));
 
     axios
-      .get(`http://localhost:8080/api/cart/bill/${user.cid}`)
+      .get(`http://localhost:8080/api/cart/${user.cid}`)
       .then((res) => {
         console.log(res)
         let total = res.data.response[0] ? res.data.response[0].total : 0;
         setTotal(total.toFixed(2));
       })
-      .catch((err) => console.log(err));
-  }, [cart, user]);
+      .catch((err) => console.log(err))
+      .finally(() => setLoad(false))
+  }, []);
 
   return (
     Object.keys(user).length ?
