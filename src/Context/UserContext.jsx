@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { createContext, useState, useEffect } from 'react'
 import axios from 'axios'
+import { redirect } from 'react-router-dom'
 
 const UserContext = createContext([])
 
@@ -76,21 +77,23 @@ const UserProvider = ({ children }) => {
       ,)
   }
 
-  const signInGH = async () => {
-    return axios.get('http://localhost:8080/api/auth/github',
-      {},
-      {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      }).then(res => console.log(res))
-      .catch(err => console.log(err))
+
+  const signInGoogle = async () => {
+    redirect('localhost:8080/api/session/google')
+    // return axios.get('http://localhost:8080/api/session/google',
+    //   {},
+    //   {
+    //     headers: {
+    //       Accept: "application/json",
+    //       "Content-Type": "application/json",
+    //     },
+    //     withCredentials: true,
+    //   }).then(res => console.log(res))
+    //   .catch(err => console.log(err))
   }
 
   return (
-    <UserContext.Provider value={{ user, setUser, cart, setCart, getCart, quantityProducts, setQuantityProducts, register, login, logout, forgotPassword, signInGH }}>
+    <UserContext.Provider value={{ user, setUser, cart, setCart, getCart, quantityProducts, setQuantityProducts, register, login, logout, forgotPassword, signInGoogle }}>
       {children}
     </UserContext.Provider>
   )
