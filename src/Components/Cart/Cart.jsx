@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
 import CartCard from "./CartCard";
-import Load from "../Load/Load";
+import Load from "../Load";
 import "./Cart.css";
 import ReturnButton from "../ReturnButton";
 import { Box, Button, Typography } from "@mui/material";

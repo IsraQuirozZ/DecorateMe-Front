@@ -4,7 +4,7 @@ import axios from "axios";
 import { Pagination, Box, TextField, Typography } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import ProductCard from "./ProductCard";
-import Load from "../Load/Load";
+import Load from "../Load";
 import Swal from "sweetalert2";
 
 const ProductsContainer = () => {

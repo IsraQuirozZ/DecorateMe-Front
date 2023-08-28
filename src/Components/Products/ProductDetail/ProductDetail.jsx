@@ -3,7 +3,7 @@ import axios from "axios";
 import { UserContext } from "../../../Context/UserContext";
 import { useNavigate, useParams } from "react-router-dom";
 import ItemCount from "./ItemCount";
-import Load from "../../Load/Load";
+import Load from "../../Load";
 import { Box, Typography, useMediaQuery, Rating } from "@mui/material";
 import ReturnButton from "../../ReturnButton";
 import Swal from "sweetalert2";
