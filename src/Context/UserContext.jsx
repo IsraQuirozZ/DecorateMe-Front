@@ -2,6 +2,7 @@
 import { createContext, useState } from 'react'
 import axios from 'axios'
 import { redirect } from 'react-router-dom'
+import { Password } from '@mui/icons-material'
 
 const UserContext = createContext([])
 
@@ -104,8 +105,24 @@ const UserProvider = ({ children }) => {
     )
   }
 
+  const resetPassword = (password, confirmPassword) => {
+    return axios.post(
+      'http://localhost:8080/api/session/reset-password',
+      {
+        password, confirmPassword
+      },
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    )
+  }
+
   return (
-    <UserContext.Provider value={{ user, setUser, cart, setCart, getCart, quantityProducts, setQuantityProducts, register, login, logout, forgotPassword, ableToReset, signInGoogle }}>
+    <UserContext.Provider value={{ user, setUser, cart, setCart, getCart, quantityProducts, setQuantityProducts, register, login, logout, forgotPassword, ableToReset, resetPassword, signInGoogle }}>
       {children}
     </UserContext.Provider>
   )

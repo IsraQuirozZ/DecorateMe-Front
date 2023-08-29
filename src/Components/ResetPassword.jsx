@@ -22,12 +22,19 @@ const ResetPassword = () => {
 		(async () => {
 			try {
 				if (token) {
-					const res = await ableToReset(token)
-					console.log(res)
+					await ableToReset(token)
 					setIsAble(true)
 				}
-			} catch {
+			} catch (err) {
 				setIsAble(false)
+				Swal.fire({
+					title: 'Error',
+					icon: 'error',
+					text: err.response.data.error,
+					confirmButtonText: 'Go to forgot password'
+				}).then(res => {
+					if (res.isConfirmed) navigation('/forgot-password')
+				})
 			} finally {
 				setLoad(false)
 			}
@@ -49,23 +56,33 @@ const ResetPassword = () => {
     });
   };
 
-	const submitHandler = (e) => {
+	const submitHandler = async e => {
 		e.preventDefault();
-		if (formData.password !== formData.confirmPassword) {
-			return Swal.fire({
-				icon: 'error',
-				text: 'Passwords mismatch'
+		try {
+			if (formData.password !== formData.confirmPassword) {
+				return Swal.fire({
+					icon: 'error',
+					text: 'Passwords mismatch'
+				})
+			}
+			await resetPassword(formData.password, formData.confirmPassword)
+			Swal.fire('', 'Password reset successfully', 'success').then((res) => res.isConfirmed && navigation('/'))
+		} catch (error) {
+			console.log(error)
+			if (error.response.status === 400) {
+				return Swal.fire('Error', error.response.data.error, 'error')
+			}
+			Swal.fire('Error', error.response.data.error, 'error').then(res => {
+				if (res.isConfirmed) navigation('/forgot-password')
 			})
 		}
-		resetPassword(formData.password, formData.confirmPassword)
-		console.log(formData)
 	}
 
 	return (
 		load 
 			? <Load/>
 			: isAble 
-				? <>
+				&& <>
 						<Typography sx={{
 							margin: 1,
 							textAlign: 'center'
@@ -122,14 +139,6 @@ const ResetPassword = () => {
 							<Button type="submit" variant="contained">Reset</Button>
 						</Box>
 					</>
-				: Swal.fire({
-					title: 'Error',
-					icon: 'error',
-					text: 'Invalid token, please try sending the reset request again',
-					confirmButtonText: 'Go to forgot password'
-				}).then(res => {
-					if (res.isConfirmed) navigation('/forgot-password')
-				})
 	)
 }
 
