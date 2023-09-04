@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import { UserContext } from "../Context/UserContext";
 import GoogleWidget from "./GoogleWidget";
-import Swal from "sweetalert2";
 
 const Login = () => {
   const { login, setUser } = useContext(UserContext);
@@ -40,8 +39,8 @@ const Login = () => {
     e.preventDefault();
     login(formData)
       .then(async (res) => {
-        console.log(res)
-        await setUser(res.data.response.user)
+        console.log(res.data.response.user);
+        await setUser(res.data.response.user);
         setFormData({
           email: "",
           password: "",
@@ -50,26 +49,16 @@ const Login = () => {
           email: true,
           password: true,
         });
-        window.location.href = "/";
+        // window.location.href = "/";
       })
       .catch((err) => {
-        console.log(err)
         if (err.response.status === 400) {
-          setMessage(err.response.data.error)
+          console.log("pasa en 400");
+          console.log(err);
+          setMessage(err.response.data.error);
         } else if (err.response.status === 401) {
-          Swal.fire({
-            title: 'Error',
-            text: err.response.data.error,
-            icon: 'error',
-            confirmButtonText: 'Return home'
-          }).then((res) => { if (res.isConfirmed) { window.location.href = '/' } })
-        } else if (err.response.data.error === 404) {
-          Swal.fire({
-            title: 'Error',
-            text: err.response.data.error,
-            icon: 'error',
-            confirmButtonText: 'Register'
-          }).then((res) => { if (res.isConfirmed) { window.location.href = '/register' } })
+          console.log("pasa en 401");
+          setMessage(err.response.data.error);
         }
       });
   };
@@ -117,9 +106,7 @@ const Login = () => {
             autoComplete="current-password"
             onChange={changeHandler}
           />
-          <Typography sx={{ color: "black" }}>
-            {message}
-          </Typography>
+          <Typography sx={{ color: "red" }}>{message}</Typography>
           <Button
             type="submit"
             fullWidth
@@ -142,7 +129,7 @@ const Login = () => {
         </Box>
       </Box>
     </Container>
-  )
+  );
 };
 
 export default Login;
