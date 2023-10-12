@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import { redirect } from "react-router-dom";
 // import { Password } from '@mui/icons-material'
@@ -7,24 +7,29 @@ import { redirect } from "react-router-dom";
 const UserContext = createContext([]);
 
 const UserProvider = ({ children }) => {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("user")) ?? {}
+  );
+
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(user));
+  }, [user]);
 
   const [cart, setCart] = useState([]);
   const [quantityProducts, setQuantityProducts] = useState(0);
 
-  const getCart = async () => {
-    // axios
-    //   .get(`http://localhost:8080/api/cart/${user.cid}`, {
-    //     headers: {
-    //       Accept: "application/json",
-    //       "Content-Type": "application/json",
-    //     },
-    //     withCredentials: true,
-    //   })
-    //   .then((res) => {
-    //     setQuantityProducts(res.data.response.products.length);
-    //   })
-    //   .catch((err) => console.log(err));
+  const getCart = async (cid) => {
+    return axios.get(`http://localhost:8080/api/cart/${cid}`, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    // .then((res) => {
+    //   setQuantityProducts(res.data.response.products.length);
+    // })
+    // .catch((err) => console.log(err));
   };
 
   const register = async (formData) => {
@@ -50,7 +55,7 @@ const UserProvider = ({ children }) => {
 
   const logout = async () => {
     return await axios
-      .post("http://localhost:8080/api/session/logout", {
+      .delete("http://localhost:8080/api/session/logout", {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -59,9 +64,14 @@ const UserProvider = ({ children }) => {
       })
       .then(() => {
         setUser({});
-        // window.location.href = "/";
+        window.location.href = "/";
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        if (err) {
+          setUser({});
+        }
+        console.log(err);
+      });
   };
 
   const signInGoogle = async () => {

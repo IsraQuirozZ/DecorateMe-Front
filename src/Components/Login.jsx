@@ -39,7 +39,6 @@ const Login = () => {
     e.preventDefault();
     login(formData)
       .then(async (res) => {
-        console.log(res.data.response.user);
         await setUser(res.data.response.user);
         setFormData({
           email: "",
@@ -49,15 +48,12 @@ const Login = () => {
           email: true,
           password: true,
         });
-        // window.location.href = "/";
+        window.location.href = "/";
       })
       .catch((err) => {
         if (err.response.status === 400) {
-          console.log("pasa en 400");
-          console.log(err);
           setMessage(err.response.data.error);
         } else if (err.response.status === 401) {
-          console.log("pasa en 401");
           setMessage(err.response.data.error);
         }
       });

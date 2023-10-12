@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { IconButton, Typography, Box, Button } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
 
-const ItemCount = ({ product, addToCart, user, able }) => {
+const ItemCount = ({ product, addToCart, user }) => {
   const [units, setUnits] = useState(1);
   const [addBtn, setAddBtn] = useState("Add to Cart");
 
@@ -21,10 +21,6 @@ const ItemCount = ({ product, addToCart, user, able }) => {
     }
   };
 
-  useEffect(() => {
-    console.log(able)
-  })
-
   const handleClick = () => {
     addToCart(user.cid, product._id, units);
     setUnits(1);
@@ -33,21 +29,38 @@ const ItemCount = ({ product, addToCart, user, able }) => {
 
   return (
     <>
-      <Box sx={{ marginTop: '20px' }}>
+      <Box sx={{ marginTop: "20px" }}>
         <Typography>Quantity:</Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: '0 20px' }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            margin: "0 20px",
+          }}
+        >
           <IconButton onClick={sub}>
-            <Remove sx={{ color: 'black' }}/>
+            <Remove sx={{ color: "black" }} />
           </IconButton>
-          <Typography sx={{ padding: '0 20px' }}>
+          <Typography sx={{ padding: "0 20px" }}>
             {units === product.stock ? `${units} Max` : units}
           </Typography>
           <IconButton onClick={sum}>
-            <Add sx={{ color: 'black' }}/>
+            <Add sx={{ color: "black" }} />
           </IconButton>
         </Box>
       </Box>
-      <Button variant="contained" sx={{ backgroundColor: 'wheat', color: 'black', ":hover": { backgroundColor: 'black'} }} fullWidth value={product._id} onClick={handleClick}>
+      <Button
+        variant="contained"
+        sx={{
+          backgroundColor: "wheat",
+          color: "black",
+          ":hover": { backgroundColor: "black" },
+        }}
+        fullWidth
+        value={product._id}
+        onClick={handleClick}
+      >
         {addBtn}
       </Button>
     </>
